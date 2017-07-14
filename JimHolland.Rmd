@@ -15,7 +15,7 @@ setwd("~/Desktop/JimHolland-2017")
 require("vegan")
 
 # Load Soil Data
-dat <- read.table("~/Desktop/JimHolland-2017/Nicolecoloniesdata.txt", sep = ",", header = TRUE)
+dat <- read.table("~/GitHub/SSRP_2017/colonydata.txt", sep = ",", header = TRUE)
 
 soil.dat <- dat[dat$Type == 'soil', ]
 skin.dat <- dat[dat$Type == 'skin', ]
