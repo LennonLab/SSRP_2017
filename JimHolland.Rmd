@@ -9,7 +9,7 @@ output: pdf_document
 # Retrieve and set the working directory
 rm(list=ls())
 getwd()
-setwd("~/Desktop/JimHolland-2017")
+setwd("C:/Users/Venus/GitHub/SSRP_2017")
 
 # Load packages
 require("vegan")
@@ -31,19 +31,23 @@ skin.dat <- dat[dat$Type == 'skin', ]
 # Simple Scatterplot
 x <- soil.dat$Concentration
 col.num <- soil.dat$Colonies
+dil.factor <- soil.dat$Dilutions
+cfu <- (col.num/0.1)/dil.factor # Calculate CFU from colony number
+cfu.log <- log(cfu) # Log transform 
 col.num.log <- log(soil.dat$Colonies)
 m.types <- soil.dat$Morphotypes
-m.types.log <- log(soil.dat$Morphotypes)
+m.dil.factor <- m.types/dil.factor
+m.types.log <- log(m.dil.factor)
 ```
 
-
+## Plot number of colonies 
 
 ```{r}
 plot.new()
 par(mfrow=c(2, 2), mar = c(5,5,3,1), oma =c(0,0,2,0))
 
 plot(x, col.num, main="Number of colonies vs Rpf", 
-  	xlab="Rpf concentration", ylab="Number of colonies", pch=19)
+  	xlab="Rpf concentration (umol/L)", ylab="CFU", pch=19)
 
 # Add fit lines
 lm.fit <- lm(col.num ~ x + I(x^2))
@@ -58,21 +62,22 @@ lines(dat2$x, dat2$y, col="red") # regression line (y~x)
 lines(lowess(x, col.num), col="blue") # lowess line (x,y)
 ```
 
+## Plotting log(CFU) 
 
 ```{r}
-plot(x, col.num.log, main="log(Colonies) vs Rpf", 
-  	xlab="Rpf concentration", ylab="log(number of colonies)", pch=19)
+plot(x, cfu.log, main="log(CFU) vs Rpf", 
+  	xlab="Rpf concentration", ylab="log(CFU)", pch=19)
 
 # Add fit lines
-lm.fit <- lm(col.num.log ~ x + I(x^2))
+lm.fit <- lm(cfu.log ~ x + I(x^2))
 dat2 <- data.frame(cbind('x'=x, 'y'=predict(lm.fit)))
 dat2 <- dat2[order(dat2), ]
 
 lines(dat2$x, dat2$y, col="red") # regression line (y~x) 
-lines(lowess(x, col.num.log), col="blue") # lowess line (x,y)
+lines(lowess(x, cfu.log), col="blue") # lowess line (x,y)
 ```
 
-
+## Plot morphotypes 
 
 ```{r}
 plot(x, m.types, main="Morphotypes vs Rpf", 
@@ -87,6 +92,7 @@ lines(dat2$x, dat2$y, col="red") # regression line (y~x)
 lines(lowess(x, m.types), col="blue") # lowess line (x,y)
 ```
 
+## Plot log(morphotypes)
 
 ```{r}
 plot(x, m.types.log, main="log(Morphotypes) vs Rpf", 
@@ -101,10 +107,12 @@ lines(dat2$x, dat2$y, col="red") # regression line (y~x)
 lines(lowess(x, m.types.log), col="blue") # lowess line (x,y)
 ```
 
+# Skin Data
+## Student T-test with mock data
 
 ```{r}
 # Load Skin Data
-skin.dat <- read.table("~/Desktop/JimHolland-2017/mockdata.csv", sep = ",", header = TRUE)
+skin.dat <- read.table("mockdata.csv", sep = ",", header = TRUE)
 
 #skin.samp <- skin.dat$
 #soilsamp <- dat$Colony_num[dat$Rpf_conc == ]
