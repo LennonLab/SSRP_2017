@@ -1,0 +1,51 @@
+How inducing microbial activity alters culturability
+
+Mentors: Venus Kuo and Kenneth J. Locey
+
+Background:
+> The human body is covered with many millions of bacteria.
+> Bacteria on our skin can be made to grow (cultured) on agar plates and studied.  
+> However, culturing bacteria from environments, such as skin, can be challenging because the majority bacterial cells can be dormant.
+> Dormancy also allows bacteria to persist in conditions that are too poor for growth.
+> Research suggests that 50-60% of skin bacteria are dormant while the rest are active or dead. 
+> However, dormant bacteria can detect chemical signals that allow them to resuscitate and resume growth in favorable conditions.
+> In our laboratory, we study how bacteria resuscitate in the presence of an enzyme called “resuscitation promoting factor” (Rpf). Rpf has the potential to resuscitate many different species of dormant bacteria.
+
+Overarching research question:
+* Does forcing bacteria out of dormancy (inducing activity) alter the ability to culture them?
+* Considerations: Could forcing bacteria out of dormancy kill them? Will microbes that are forced to become active even grow and reproduce?
+
+Terms to know: 
+* Dormant = A metabolically inactive state. Does not permit growth.
+* Enzyme = Biological catalyst that increases the rates of chemical reactions.
+* Agar plates = An experimental media used to culture microorganisms. 
+* Culture = Maintenance of microorganisms in conditions suitable for growth.
+* Rpf = Resuscitation promoting factor. An enzyme that resuscitates dormant bacteria by breaking apart peptidoglycan.
+* Peptidoglycan = A major component of bacterial cell wall that nearly all bacteria possess. 
+* Biological signal = A chemical indication of a “good” environment to exit dormancy.
+* Resuscitate = Transition from dormancy to activity.
+
+Experimental set up: Six treatments (Five concentrations of Rpf+ and one Rpf- control) x five replicate = 30 petri plates
+
+Timeline of program
+Experimental methods (With Venus Kuo): 
+1. Make nutrient agar plates and physiological saline solution.
+2. Extract bacterial community with sterile swab and physiological saline solution.
+3. Transfer solution to falcon tube and centrifuge, suspend in saline solution, and divide into five sterile falcon tubes. 
+4. Add following Rpf concentration in tubes: 0, 0.5, 1.25, 1.7, 2.5, and 5 ?mol/L. 
+5. Incubate skin bacteria with treatment at 30°C for 1 day.
+6. Make 10-2 and 10-4 serial dilutions of skin bacteria and spread plate on nutrient agar. 
+7. Incubate plates for 2 days at 30°C. 
+8. Perform colony forming unit counting. 
+
+Experimental data analysis (With Ken Locey)
+1. Analyze results with statistical software. 
+
+Design poster presentation (With Venus and Ken) 
+
+Readings provided in email: 
+* Lennon_Jones_2011.pdf – A Nature Reviews Microbiology paper that provides a broad overview for understanding the importance of dormancy for microorganisms.
+
+* 20140331_2216_DoB_Lennon_ProjSumm.pdf – One-page summary of National Science Foundation Dimensions of Biodiversity Grant outline aims and goals of Lennon research. See also lab website: https://www.indiana.edu/~microbes/ 
+
+
