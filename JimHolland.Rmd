@@ -9,10 +9,7 @@ output: pdf_document
 # Retrieve and set the working directory
 rm(list=ls())
 getwd()
-setwd("C:/Users/Venus/GitHub/SSRP_2017")
-
-# Load packages
-require("vegan")
+setwd("~/GitHub/DistDecay/analyses/DistanceDecay")
 
 # Load Soil Data
 dat <- read.table("~/GitHub/SSRP_2017/colonydata.txt", sep = ",", header = TRUE)
@@ -22,107 +19,95 @@ skin.dat <- dat[dat$Type == 'skin', ]
 ```
 
 
-
 ```{r}
-
-#dat <- dat[dat$Rpf_conc < 5.0, ]
-#dat <- dat[dat$Colony_num > 20, ]
-
-# Simple Scatterplot
-x <- soil.dat$Concentration
+# Assign columns in data.frame to objects
+# Calculate CFU's from colonies
+rpf <- log2(soil.dat$Concentration + 1)
 col.num <- soil.dat$Colonies
 dil.factor <- soil.dat$Dilutions
 cfu <- (col.num/0.1)/dil.factor # Calculate CFU from colony number
-cfu.log <- log(cfu) # Log transform 
-col.num.log <- log(soil.dat$Colonies)
 m.types <- soil.dat$Morphotypes
-m.dil.factor <- m.types/dil.factor
-m.types.log <- log(m.dil.factor)
 ```
 
-## Plot number of colonies 
 
+## Plot number of colony forming units (CFUs) 
 ```{r}
 plot.new()
-par(mfrow=c(2, 2), mar = c(5,5,3,1), oma =c(0,0,2,0))
+par(mfrow=c(1, 1), mar = c(5,5,3,1), oma =c(0,0,2,0))
 
-plot(x, col.num, main="Number of colonies vs Rpf", 
-  	xlab="Rpf concentration (umol/L)", ylab="CFU", pch=19)
-
-# Add fit lines
-lm.fit <- lm(col.num ~ x + I(x^2))
-dat2 <- data.frame(cbind('x'=x, 'y'=predict(lm.fit)))
-dat2 <- dat2[order(dat2), ]  
-
-summary(lm.fit)$r.squared
-summary(lm.fit)$coefficients
-summary(lm.fit)$p.value
-
-lines(dat2$x, dat2$y, col="red") # regression line (y~x) 
-lines(lowess(x, col.num), col="blue") # lowess line (x,y)
-```
-
-## Plotting log(CFU) 
-
-```{r}
-plot(x, cfu.log, main="log(CFU) vs Rpf", 
-  	xlab="Rpf concentration", ylab="log(CFU)", pch=19)
+plot(rpf, cfu, main="Number of colonies vs Rpf", 
+  	xlab="Rpf concentration, log2(umol/L)", ylab="CFU", pch=19)
 
 # Add fit lines
-lm.fit <- lm(cfu.log ~ x + I(x^2))
-dat2 <- data.frame(cbind('x'=x, 'y'=predict(lm.fit)))
+lm.fit <- lm(cfu ~ rpf + I(rpf^2))
+dat2 <- data.frame(cbind('rpf'=rpf, 'cfu'=predict(lm.fit)))
 dat2 <- dat2[order(dat2), ]
 
-lines(dat2$x, dat2$y, col="red") # regression line (y~x) 
-lines(lowess(x, cfu.log), col="blue") # lowess line (x,y)
+r2 <- summary(lm.fit)$r.squared
+coefs <- summary(lm.fit)$coefficients
+summary(lm.fit)
+
+# predicts + interval
+newx <- seq(min(rpf), max(rpf), length.out=30)
+preds <- predict(lm.fit, interval = 'confidence')
+
+clr <- 'gray' #c(2,2,3,4,5) 
+clr <- adjustcolor(clr, alpha.f = 0.3) 
+polygon(c(rev(newx), newx), c(rev(preds[ ,3]), preds[ ,2]), col = clr, border = NA)
+
+lines(dat2$rpf, dat2$cfu, col="red", lwd=2) # regression line (y~x) 
+lines(lowess(rpf, cfu), col="blue", lwd=2) # lowess line (x,y)
+points(rpf, cfu, pch=19)
 ```
+
 
 ## Plot morphotypes 
-
 ```{r}
-plot(x, m.types, main="Morphotypes vs Rpf", 
-  	xlab="Rpf concentration", ylab="Number of morphotypes", pch=19)
+plot.new()
+plot(rpf, m.types, main="Morphotypes vs Rpf", 
+  	xlab="Rpf concentration, log2(umol/L)", ylab="Number of morphotypes", pch=19)
 
-# Add fit lines
-lm.fit <- lm(m.types ~ x + I(x^2))
-dat2 <- data.frame(cbind('x'=x, 'y'=predict(lm.fit)))
+lm.fit <- lm(m.types ~ rpf, dat)
+dat2 <- data.frame(cbind('rpf'=rpf, 'mtype'=predict(lm.fit)))
 dat2 <- dat2[order(dat2), ]  
 
-lines(dat2$x, dat2$y, col="red") # regression line (y~x) 
-lines(lowess(x, m.types), col="blue") # lowess line (x,y)
-```
+r2 <- summary(lm.fit)$r.squared
+coefs <- summary(lm.fit)$coefficients
+#summary(lm.fit)
 
-## Plot log(morphotypes)
+# predicts + interval
+newx <- seq(min(dat2$rpf), max(dat2$rpf), len=100)
+preds <- predict(lm.fit, newdata=data.frame(x=newx),interval = c("confidence"), level = 0.95, type="response") 
 
-```{r}
-plot(x, m.types.log, main="log(Morphotypes) vs Rpf", 
-  	xlab="Rpf concentration", ylab="log(number of morphotypes)", pch=19)
+clr <- 'gray' #c(2,2,3,4,5) 
+clr <- adjustcolor(clr, alpha.f = 0.3) 
+polygon(c(rev(newx), newx), c(rev(preds[ ,3]), preds[ ,2]), col = clr, border = NA)
 
-# Add fit lines
-lm.fit <- lm(m.types.log ~ x + I(x^2))
-dat2 <- data.frame(cbind('x'=x, 'y'=predict(lm.fit)))
-dat2 <- dat2[order(dat2), ]  
-
-lines(dat2$x, dat2$y, col="red") # regression line (y~x)
-lines(lowess(x, m.types.log), col="blue") # lowess line (x,y)
+lines(dat2$rpf, dat2$y, col="red", lwd=2) # regression line (y~x) 
+lines(lowess(rpf, m.types), col="blue", lwd=2) # lowess line (x,y)
+points(rpf, m.types, pch=19)
 ```
 
 # Skin Data
-## Student T-test with mock data
-
+## Two-tailed T-test for di
 ```{r}
-# Load Skin Data
-skin.dat <- read.table("mockdata.csv", sep = ",", header = TRUE)
+soil.dat <- soil.dat[soil.dat$Concentration > 0, ]
+soil.dat <- soil.dat[soil.dat$Concentration < 1.7, ]
 
-#skin.samp <- skin.dat$
-#soilsamp <- dat$Colony_num[dat$Rpf_conc == ]
+rpf <- log2(soil.dat$Concentration + 1)
+col.num <- soil.dat$Colonies
+dil.factor <- soil.dat$Dilutions
+cfu <- (col.num/0.1)/dil.factor # Calculate CFU from colony number
+soil.cfu <- log2(cfu)
 
-skin.samp <- c(1,2,3,4,5,6,5,4,3,2,1)
-soil.samp <- c(2,2,4,4,6,6,4,4,2,2,1)
-t.test(skin.samp, soil.samp)
+skin.rpf <- log2(skin.dat$Concentration + 1)
+skin.col.num <- skin.dat$Colonies
+dil.factor <- skin.dat$Dilutions
+skin.cfu <- (skin.col.num/0.1)/dil.factor # Calculate CFU from colony number
+skin.cfu <- log2(skin.cfu)
 
-skin.samp <- c(1,2,3,4,5,5,6,6,7,8)
-soil.samp <- c(2,2,3,3,4,4,2,1,1,1)
-t.test(skin.samp, soil.samp)
+t.test(skin.cfu, soil.cfu)
 
+avg.skin <- mean(skin.cfu)
+avg.soil <- mean(soil.cfu)
 ```
